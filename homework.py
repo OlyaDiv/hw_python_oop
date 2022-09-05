@@ -23,9 +23,9 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-    LEN_STEP = 0.65  # длина одного шага
-    M_IN_KM = 1000   # константа для перевода значений из метров в километры
-    M_IN_HOURS = 60  # время тренировки в минутах
+    LEN_STEP: float = 0.65  # длина одного шага
+    M_IN_KM: int = 1000     # константа для перевода значений из м в км
+    M_IN_HOURS: int = 60    # время тренировки в минутах
 
     def __init__(
         self,
@@ -62,15 +62,17 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    COEFF_FOR_RUN_1 = 18  # коэфф-т 1 для расчета калорий при беге
-    COEFF_FOR_RUN_2 = 20  # коэфф-т 2 для расчета калорий при беге
+    COEFF_FOR_RUN_1: int = 18  # коэфф-т 1 для расчета калорий при беге
+    COEFF_FOR_RUN_2: int = 20  # коэфф-т 2 для расчета калорий при беге
 
     def get_spent_calories(self) -> float:
         duration_in_mn = self.duration * self.M_IN_HOURS
         return (
-            (self.COEFF_FOR_RUN_1
-             * self.get_mean_speed()
-             - self.COEFF_FOR_RUN_2)
+            (
+                self.COEFF_FOR_RUN_1
+                * self.get_mean_speed()
+                - self.COEFF_FOR_RUN_2
+            )
             * self.weight
             / self.M_IN_KM
             * duration_in_mn
@@ -79,8 +81,8 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    COEFF_FOR_WALK_1 = 0.035  # коэфф-т 1 для расчета калорий при ходьбе
-    COEFF_FOR_WALK_2 = 0.029  # коэфф-т 2 для расчета калорий при ходьбе
+    COEFF_FOR_WALK_1: float = 0.035  # коэфф-т 1 для расчета калорий при ходьбе
+    COEFF_FOR_WALK_2: float = 0.029  # коэфф-т 2 для расчета калорий при ходьбе
 
     def __init__(
         self,
@@ -95,21 +97,25 @@ class SportsWalking(Training):
     def get_spent_calories(self) -> float:
         duration_in_mn = self.duration * self.M_IN_HOURS
         return (
-            (self.COEFF_FOR_WALK_1
-             * self.weight
-             + (self.get_mean_speed() ** 2
-                // self.height)
-             * self.COEFF_FOR_WALK_2
-             * self.weight)
+            (
+                self.COEFF_FOR_WALK_1
+                * self.weight
+                + (
+                    self.get_mean_speed() ** 2
+                    // self.height
+                )
+                * self.COEFF_FOR_WALK_2
+                * self.weight
+            )
             * duration_in_mn
         )
 
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    LEN_STEP = 1.38         # длина одного гребка
-    COEFF_FOR_SWIM_1 = 1.1  # коэфф-т 1 для расчета калорий при плавании
-    COEFF_FOR_SWIM_2 = 2    # коэфф-т 2 для расчета калорий при плавании
+    LEN_STEP: float = 1.38         # длина одного гребка
+    COEFF_FOR_SWIM_1: float = 1.1  # коэфф-т 1 для расчета калорий при плавании
+    COEFF_FOR_SWIM_2: int = 2      # коэфф-т 2 для расчета калорий при плавании
 
     def __init__(
         self,
@@ -133,8 +139,10 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         return (
-            (self.get_mean_speed()
-             + self.COEFF_FOR_SWIM_1)
+            (
+                self.get_mean_speed()
+                + self.COEFF_FOR_SWIM_1
+            )
             * self.COEFF_FOR_SWIM_2
             * self.weight
         )
@@ -142,9 +150,11 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_types: Dict[str, Type[Training]] = {'SWM': Swimming,
-                                                 'RUN': Running,
-                                                 'WLK': SportsWalking}
+    training_types: Dict[str, Type[Training]] = {
+        'SWM': Swimming,
+        'RUN': Running,
+        'WLK': SportsWalking
+    }
     if workout_type in training_types:
         return training_types[workout_type](*data)
     else:
